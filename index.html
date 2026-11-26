@@ -564,7 +564,7 @@ bears:{g:'چیرۆکی کچان',f:'bears_',t:"سێ ورچەکە",d:"ورچەک�
 };
 ['turtle','crow','wind','ant','duck','hen','partridge','soup','bears'].forEach(k=>{S[k].n=1});
 const $=id=>document.getElementById(id);
-const card=([k,s])=>`<button class="card" data-k="${k}" style="--cc:${s.c}"><span class="pic"><img src="img/cbg-${k}.webp" alt="${s.t}"><span class="glass"></span><img class="fg" src="img/cfg-${k}.webp" alt="">${s.n?'':'<span class="seal"><span class="sr"></span><b>کتێبی<br>تەواو</b><small>سەیرکە</small></span>'}</span><span class="see pill"><span class="tx"><b>${s.t}</b></span><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></button>`;
+const card=([k,s])=>`<button class="card" data-k="${k}" style="--cc:${s.c}"><span class="pic"><img src="cbg-${k}.webp" alt="${s.t}"><span class="glass"></span><img class="fg" src="cfg-${k}.webp" alt="">${s.n?'':'<span class="seal"><span class="sr"></span><b>کتێبی<br>تەواو</b><small>سەیرکە</small></span>'}</span><span class="see pill"><span class="tx"><b>${s.t}</b></span><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></button>`;
 const E=Object.entries(S);
 $('shelfB').innerHTML=E.filter(e=>e[1].g==='چیرۆکی کوڕان').map(card).join('');
 $('shelfG').innerHTML=E.filter(e=>e[1].g==='چیرۆکی کچان').map(card).join('');
@@ -572,13 +572,13 @@ let cur=null,idx=0;
 const TG={"b": {"0": {"r": [17.82, 34.9, 70.72, 54.97], "p": [54.56, 9.94], "b": [20.03, 15.65, 66.3, 17.5], "n": [54.01, 92.63], "nc": "#34268c"}, "1": {"r": [9.94, 34.9, 70.86, 55.25], "p": [41.57, 10.13], "b": [11.88, 15.65, 66.99, 17.5], "n": [42.27, 92.63], "nc": "#164896"}, "ink": "#1c2248", "ph": "#4669aa"}, "g": {"0": {"r": [20.99, 39.78, 72.79, 52.3], "p": [59.12, 10.87], "b": [23.48, 17.03, 68.37, 20.72], "n": [61.46, 94.94], "nc": "#c42856"}, "1": {"r": [11.88, 39.59, 71.55, 52.58], "p": [46.13, 10.87], "b": [14.64, 18.42, 56.63, 19.8], "n": [40.19, 94.94], "nc": "#c42856"}, "ink": "#762696", "ph": "#be4678"}};
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function tplPage(s,n,i){const g=s.g==='چیرۆکی کوڕان'?'b':'g',side=n%2?0:1,t=TG[g][side];
- return `<div class="tp" style="background-image:url(img/tpl-${g}${side?'R':'L'}.jpg)">
+ return `<div class="tp" style="background-image:url(tpl-${g}${side?'R':'L'}.jpg)">
  <span class="tt" style="left:${t.p[0]}%;top:${t.p[1]}%">${esc(s.x[i][0])}</span>
  <span class="tb" style="left:${t.b[0]}%;top:${t.b[1]}%;width:${t.b[2]}%;height:${t.b[3]}%;color:${TG[g].ink}">${esc(s.x[i][1])}</span>
  <span class="tph" style="left:${t.r[0]}%;top:${t.r[1]}%;width:${t.r[2]}%;height:${t.r[3]}%;color:${TG[g].ph}">وێنەی منداڵەکەت<br>لێرە دەبێت</span>
  <span class="tn" style="left:${t.n[0]}%;top:${t.n[1]}%;color:${t.nc}">${n}</span></div>`}
 let P=[],L=0,leaves=[],ghostsL=[],ghostsR=[];
-const pg=(s,n)=>s.f?`img/${s.f}${n}.jpg`:`img/${{p:'bp',s:'gp',l:'lp'}[s.i]}${n}.jpg`;
+const pg=(s,n)=>s.f?`${s.f}${n}.jpg`:`${{p:'bp',s:'gp',l:'lp'}[s.i]}${n}.jpg`;
 const face=(p,cls)=>`<div class="face ${cls}">${p.html}<i class="sh"></i></div>`;
 const G=7, FAN=4.2;
 function open(k){
@@ -628,7 +628,7 @@ function go(j){show(j)}
 const WA='9647515164309'; // WhatsApp number, e.g. 9647701234567
 let curKey='';
 function waLink(){const t=cur?cur.t:'';const msg=`سڵاو، دەمەوێت کتێبی «${t}» داوا بکەم.\nناوی منداڵ: ${$('fName').value.trim()}\nژمارەی مۆبایل: ${$('fPhone').value.trim()}\nناونیشان: ${$('fAddr').value.trim()}`;return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`}
-function openSheet(){if(!cur)return;$('sName').textContent=cur.t;$('sImg').src=`img/card-${curKey}.webp`;$('sheet').hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>$('sheet').classList.add('on')));$('send').href=waLink()}
+function openSheet(){if(!cur)return;$('sName').textContent=cur.t;$('sImg').src=`card-${curKey}.webp`;$('sheet').hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>$('sheet').classList.add('on')));$('send').href=waLink()}
 function closeSheet(){$('sheet').classList.remove('on');setTimeout(()=>{$('sheet').hidden=true},450)}
 $('order2').onclick=openSheet;$('book').addEventListener('click',e=>{if(e.target.closest('.ctab')){if(RD)closeReader();openSheet()}});$('sx').onclick=closeSheet;$('sbg').onclick=closeSheet;
 ['fName','fPhone','fAddr'].forEach(id=>$(id).addEventListener('input',()=>{$(id).parentNode.classList.remove('bad');$('send').href=waLink()}));
@@ -682,7 +682,7 @@ document.querySelectorAll('.shelf').forEach(sh=>{sh.addEventListener('pointerdow
 
 const fitLab=()=>document.querySelectorAll('.card .see b').forEach(b=>{let f=19;b.style.fontSize=f+'px';while(b.scrollWidth>b.clientWidth&&f>13){f-=.5;b.style.fontSize=f+'px'}});
 fitLab();addEventListener('resize',fitLab);document.fonts&&document.fonts.ready.then(fitLab);
-addEventListener('load',()=>{Object.keys(S).forEach(pre);['bL','bR','gL','gR'].forEach(t=>{const im=new Image();im.src=`img/tpl-${t}.jpg`})});
+addEventListener('load',()=>{Object.keys(S).forEach(pre);['bL','bR','gL','gR'].forEach(t=>{const im=new Image();im.src=`tpl-${t}.jpg`})});
 const route=()=>{const h=location.hash.slice(1);h&&S[h]?open(h):home()};
 window.addEventListener('hashchange',route);route();
 }
