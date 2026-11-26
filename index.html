@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جینیەس ستۆری</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* VOICE: playful app store for kids' books, confident and warm
+   IDEA: a game-card shelf, cards you pick like a game
+   PICTURE: the story cards themselves, big and colourful
+   COLOUR and TYPE: black ground, card colours lead; IBM Plex Sans Arabic
+   LAYOUT: phone-first single column, centred app frame on desktop */
+:root{--cw:min(calc((min(100vw,480px) - 36px)*.6),270px);color-scheme:dark;--bg:#000;--panel:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--ink:#fff;--mute:#9a9ca5;--acc:#ffb21e}
+*{box-sizing:border-box;min-width:0}
+body::before,body::after{content:"";position:fixed;z-index:-1;border-radius:50%;filter:blur(70px);pointer-events:none}
+body::before{width:115vw;height:58vh;left:-10vw;top:28vh;background:radial-gradient(closest-side,rgba(255,140,30,.55),rgba(255,110,20,.15) 60%,transparent);animation:drift1 14s ease-in-out infinite alternate}
+body::after{width:80vw;height:45vh;right:-25vw;bottom:-10vh;background:radial-gradient(closest-side,rgba(255,95,20,.35),transparent);animation:drift2 18s ease-in-out infinite alternate}
+@keyframes drift1{0%{transform:translate(-8vw,-6vh) scale(1)}50%{transform:translate(10vw,4vh) scale(1.12)}100%{transform:translate(-2vw,10vh) scale(.95)}}
+@keyframes drift2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-30vw,-25vh) scale(1.2)}}
+body{margin:0;background:#0a0705;min-height:100vh;color:var(--ink);font:16px/1.7 "IBM Plex Sans Arabic",system-ui,sans-serif;overflow-x:clip}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;padding:calc(14px + env(safe-area-inset-top)) env(safe-area-inset-right) calc(32px + env(safe-area-inset-bottom)) env(safe-area-inset-left)}
+header{display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.logo{font-weight:700;font-size:19px}.logo b{color:var(--acc)}
+.hpill{background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 18px rgba(0,0,0,.25);border-radius:99px;padding:6px 14px;font-size:13px;color:var(--mute)}
+h1{font-size:clamp(22px,6.6vw,27px);line-height:1.25;margin:14px 18px 2px;text-wrap:balance}
+h1 span{color:var(--acc)}
+.sub{margin:0 18px 6px;color:var(--mute);font-size:14px}
+.row{display:inline-flex;align-items:center;gap:8px;font-size:16px;margin:14px calc(18px + var(--cw)*.103) 4px 18px;padding:6px 14px;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 18px rgba(0,0,0,.25)}
+.row::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--acc)}
+.shelf{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px 18px 8px;scrollbar-width:none}
+.shelf::-webkit-scrollbar{display:none}
+.card{flex:0 0 min(76%,330px);scroll-snap-align:center;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:start;cursor:pointer}
+.card img{width:100%;display:block;border-radius:22px;transition:transform .25s}
+.card:active img{transform:scale(.97)}
+.card{position:relative}
+.card .lab{display:flex;margin:0 10.2% 10px 3.3%;--pc:var(--cc);height:52px;padding:0 12px}
+.card .lab b{flex:1;text-align:center;font-size:18px;text-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .lab .ic{width:42px;height:42px;flex-direction:column;line-height:1;font-size:15px;font-weight:700;gap:1px}
+.card .lab .ic small{font-size:8.5px;font-weight:600;color:#555}
+.card .pic{position:relative;display:block}
+
+.card .pic{margin-bottom:0}
+.card .see{margin:12px 10.2% 0 3.3%;--pc:var(--cc);height:58px;padding:0 12px 0 6px;gap:8px}
+.card .see .ic{width:42px;height:42px}
+.card .see .tx{min-width:0}.card .see b{display:block;font-size:19px;white-space:nowrap;overflow:hidden;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.card .pic{margin-top:8px}
+.how{margin:28px 18px 0;display:grid;gap:10px}
+.how div{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 16px;display:flex;gap:12px;align-items:center}
+.how i{font-style:normal;width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#000}
+.pill.ordb{width:calc(100% - 36px);margin:22px 18px 0;--pc:var(--c)}
+.cta{display:block;margin:22px 18px 0;padding:14px;border-radius:16px;background:var(--acc);color:#000;font-weight:700;text-align:center;text-decoration:none;font-size:17px}
+/* story view */
+#story{display:none}
+.top{display:flex;align-items:center;gap:12px;padding:0 18px}
+.back{width:44px;height:44px;border-radius:50%;background:var(--panel);border:1px solid var(--line);color:#fff;font-size:20px;cursor:pointer}
+.top h2{margin:0;font-size:22px}
+.tag{font-size:12px;padding:3px 10px;border-radius:99px;color:#000;font-weight:600;margin-inline-start:auto}
+/* 3D book */
+.stage{perspective:1500px;perspective-origin:50% 30%;display:flex;justify-content:center;padding:26px 0 8px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.book{--bw:min(86vw,440px);width:var(--bw);height:calc(var(--bw)*.75);position:relative;transform-style:preserve-3d;transform:rotateX(10deg);transition:transform .6s}
+.leaf,.base{position:absolute;top:0;width:50%;height:100%;transform-style:preserve-3d;transform-origin:100% 50%;left:0;transition:transform .85s cubic-bezier(.22,.61,.36,1)}
+.base.r{left:50%;transform-origin:0 50%}
+.base,.ghost{transition:none}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:#f6efe6;border-radius:3px 0 0 3px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.face .sh{position:absolute;inset:0;pointer-events:none;background:linear-gradient(to left,rgba(0,0,0,calc(var(--s,0)*.35)),rgba(0,0,0,calc(var(--s,0)*.08)) 60%,rgba(255,255,255,calc(var(--s,0)*.12)));}
+.face.b .sh{background:linear-gradient(to right,rgba(0,0,0,calc(var(--s,0)*.35)),rgba(0,0,0,calc(var(--s,0)*.08)) 60%,rgba(255,255,255,calc(var(--s,0)*.12)))}
+.ghost .face{box-shadow:none}
+.face img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.face::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to left,rgba(0,0,0,.28),rgba(0,0,0,0) 14%,rgba(255,255,255,0) 85%,rgba(255,255,255,.08))}
+.face.b,.base.r .face{border-radius:0 3px 3px 0}
+.face.b{transform:rotateY(180deg)}
+.face.b::after,.base.r .face::after{background:linear-gradient(to right,rgba(0,0,0,.28),rgba(0,0,0,0) 14%)}
+.cover{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;text-align:center;color:#fff;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--c) 85%,#fff),var(--c) 55%,color-mix(in srgb,var(--c) 55%,#000))}
+.cover img{width:82%;height:auto;object-fit:contain;filter:drop-shadow(0 8px 14px rgba(0,0,0,.35))}
+.cover b{font-size:clamp(14px,4.4vw,20px);line-height:1.25;text-shadow:0 2px 6px rgba(0,0,0,.35)}
+.cover small{font-size:11px;opacity:.9}
+.bk{height:100%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:16px;background:linear-gradient(160deg,var(--c),color-mix(in srgb,var(--c) 45%,#000))}
+.shadow{position:absolute;left:4%;right:4%;bottom:-26px;height:30px;background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);transform:translateZ(-40px);filter:blur(6px)}
+.dots{display:flex;justify-content:center;gap:6px;margin:8px 0}
+.dots span{width:8px;height:8px;border-radius:99px;background:#3a3b42;transition:.25s}
+.dots span.on{width:22px;background:var(--c)}
+.text{margin:10px 18px 0;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px 18px;min-height:150px}
+.text h4{margin:10px 0 2px;font-size:18px;color:var(--c)}
+.text h4:first-child{margin-top:0}
+.text p{margin:0;font-size:17px;transition:opacity .2s}
+.nav{display:flex;gap:10px;margin:12px 18px 0}
+.nav .pill{flex:1;color:#fff}
+#prev{padding:0 5px 0 14px}
+.note{margin:14px 18px 0;color:var(--mute);font-size:13px;text-align:center}
+/* small phones */
+@media(max-width:360px){.card{flex-basis:80%}.card .see{font-size:14px}.text p{font-size:16px}}
+/* tablets */
+@media(min-width:99990px){ /* tablet layout: OFF for now, restore to 700px */
+ .app{max-width:960px}
+ h1{font-size:40px;margin-top:30px}.sub{font-size:17px}
+ .shelf{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;overflow:visible;padding:10px 18px 20px}
+ .card{flex:none}
+ #story .layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:10px;align-items:center}
+ .text{min-height:220px;padding:22px 24px}.text h4{font-size:24px}.text p{font-size:19px}
+}
+/* laptops and desktops */
+@media(min-width:99999px){ /* desktop layout: OFF for now, restore to 1100px */
+ .app{max-width:1240px}
+ .shelf{grid-template-columns:repeat(4,minmax(0,1fr))}
+ h1{font-size:48px}
+}
+.land{display:flex;align-items:center;justify-content:center;gap:10px;width:calc(100% - 36px);margin:14px 18px 0;height:50px;border-radius:16px;border:1px solid rgba(255,255,255,.45);color:#1a1206;font:inherit;font-weight:700;font-size:16px;cursor:pointer;background:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 60%),var(--acc);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 22px rgba(0,0,0,.35)}
+.pill.land2{width:calc(100% - 36px);margin:14px 18px 0;--pc:var(--c)}
+.land2 .ic svg{animation:spin 2.4s ease-in-out infinite}
+@keyframes spin{0%,60%{transform:rotate(0)}80%,100%{transform:rotate(-90deg)}}
+#reader{position:fixed;inset:0;z-index:1000;background:radial-gradient(70% 70% at 50% 55%,color-mix(in srgb,var(--c) 30%,#120b06),#050302)}
+#reader[hidden]{display:none}
+#rot{position:absolute;left:0;top:0;transform-origin:0 0;display:flex;align-items:center;justify-content:center}
+#rot .stage{padding:0;width:100%;height:100%;align-items:center;touch-action:none;perspective:2600px}
+#rot .book{transform:none}
+#rot .shadow{display:none}
+.rb{position:absolute;z-index:500;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;color:#fff;font:inherit;cursor:pointer;width:84px}
+.rb .rc{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(165deg,color-mix(in srgb,var(--c) 72%,#fff),var(--c) 45%,color-mix(in srgb,var(--c) 80%,#000));border:1px solid color-mix(in srgb,var(--c) 70%,#000);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 20px -4px color-mix(in srgb,var(--c) 60%,transparent),0 3px 8px rgba(0,0,0,.4);transition:transform .15s}
+.rb:active .rc{transform:scale(.92)}
+.rb .rl{font-size:13px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.rb[disabled]{opacity:.3;pointer-events:none}
+#rclose .rc{width:44px;height:44px;background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.22);box-shadow:none}
+#rclose{top:12px;right:8px}
+#rprev{top:50%;right:8px;transform:translateY(-50%)}#rnext{top:50%;left:8px;transform:translateY(-50%)}
+.rhint{position:absolute;z-index:500;left:50%;bottom:14px;transform:translateX(-50%);white-space:nowrap;padding:8px 16px;border-radius:99px;font-size:13.5px;font-weight:600;color:#fff;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);opacity:0;transition:opacity .5s}
+.rhint.on{opacity:1}
+
+
+#sheet{position:fixed;inset:0;z-index:2000}
+#sheet[hidden]{display:none}
+.sbg{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;transition:opacity .35s}
+.sp{position:absolute;left:0;right:0;bottom:0;margin:0 auto;max-width:480px;padding:10px 18px calc(20px + env(safe-area-inset-bottom));border-radius:28px 28px 0 0;background:linear-gradient(180deg,#221710,#120c08);border-top:1px solid rgba(255,255,255,.14);box-shadow:0 -20px 50px rgba(0,0,0,.5);transform:translateY(105%);transition:transform .55s cubic-bezier(.2,1.15,.35,1)}
+#sheet.on .sbg{opacity:1}#sheet.on .sp{transform:none}
+.grab{display:block;width:44px;height:5px;border-radius:9px;background:rgba(255,255,255,.25);margin:0 auto 12px}
+.shead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.shead img{width:58px;height:58px;object-fit:cover;object-position:50% 20%;border-radius:16px;background:var(--c)}
+.shead b{display:block;font-size:19px}.shead small{color:var(--mute);font-size:13px}
+.sx{margin-inline-start:auto;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;font-size:16px;cursor:pointer}
+.fl{display:block;margin:10px 0}.fl span{display:block;font-size:14px;color:#d9d3cc;margin:0 4px 6px}
+.fl input,.fl textarea{width:100%;font:inherit;font-size:16px;color:#fff;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:13px 16px;outline:none;resize:none;transition:border-color .2s,box-shadow .2s}
+.fl input:focus,.fl textarea:focus{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 30%,transparent)}
+.fl.bad input,.fl.bad textarea{border-color:#ff5a5a;animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.pill.send{--pc:var(--c);margin-top:16px}
+.snote{text-align:center;color:var(--mute);font-size:13px;margin:10px 0 0}
+
+/* floating cards + glass sheen */
+.card .seal{position:absolute;z-index:3;right:2%;top:21%;width:76px;height:76px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;
+background:radial-gradient(circle at 35% 30%,#ff7a8a,#e8173a 55%,#a50d26);box-shadow:0 6px 16px rgba(0,0,0,.35),inset 0 2px 3px rgba(255,255,255,.6),inset 0 -3px 6px rgba(0,0,0,.2);transform:rotate(-12deg);animation:sealp 2.4s ease-in-out infinite}
+.card .seal .sr{position:absolute;inset:4px;border-radius:50%;border:2px dashed rgba(255,255,255,.75)}
+.card .seal b{font-size:14px;line-height:1.15;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.card .seal small{font-size:10px;font-weight:700;margin-top:2px;background:rgba(255,255,255,.95);color:#d0122f;padding:1px 7px;border-radius:10px}
+@keyframes sealp{0%,100%{transform:rotate(-12deg) scale(1)}50%{transform:rotate(-12deg) scale(1.08)}}
+.card .fg{position:absolute;inset:0;z-index:2;width:100%;height:100%}
+.card .pic{animation:bob 4.2s ease-in-out infinite;will-change:transform}
+.card:nth-child(2n) .pic{animation-delay:-1.4s}.card:nth-child(3n) .pic{animation-delay:-2.6s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(-.6deg)}}
+.card .glass{position:absolute;z-index:1;left:3.2%;right:9.6%;top:25.4%;bottom:2.7%;border-radius:22px;pointer-events:none;overflow:hidden;
+ background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.28) 45%,rgba(255,255,255,.06) 52%,transparent 60%) no-repeat;background-size:250% 100%;background-position:150% 0;animation:sheen 5.5s ease-in-out infinite;mix-blend-mode:soft-light}
+.card:nth-child(2n) .glass{animation-delay:-2s}.card:nth-child(3n) .glass{animation-delay:-3.7s}
+@keyframes sheen{0%,55%{background-position:150% 0}85%,100%{background-position:-60% 0}}
+.ctap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8% 12% 8% 14%;overflow:hidden;text-align:center;color:#3a2a1a;background:radial-gradient(circle at 50% 30%,#fff,#fdf1e4)}
+.ctap img{width:56%;height:auto;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.25))}
+.ctap b{font-size:clamp(11px,3.4vw,17px);line-height:1.35}
+.ctap p{margin:0;font-size:clamp(8.5px,2.3vw,12.5px);line-height:1.5;color:#6b5847}
+.ctap .ctab{--pc:var(--c);height:auto;padding:8px 16px;font-size:clamp(10px,3vw,15px);margin-top:4px}
+.intro{margin:12px 0 0;padding:12px 16px;border-radius:18px;text-align:center;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid color-mix(in srgb,var(--c) 55%,transparent);box-shadow:0 0 24px -8px var(--c);animation:introIn .6s ease-out}
+.intro[hidden]{display:none}
+.intro b{display:block;font-size:15.5px;color:#fff}.intro span{display:block;font-size:13.5px;color:#d9d3cc;margin-top:3px;line-height:1.6}
+@keyframes introIn{from{opacity:0;transform:translateY(-8px)}}
+.tp{position:absolute;inset:0;background-size:cover;container-type:size;font-family:'IBM Plex Sans Arabic',sans-serif;font-weight:700}
+.tp>span{position:absolute;text-align:center;direction:rtl}
+.tt{transform:translate(-50%,-50%);color:#fff;font-size:4.2cqw;white-space:nowrap}
+.tb{display:flex;align-items:center;justify-content:center;font-size:3.9cqw;line-height:1.7;padding:0 1cqw}
+.tph{display:flex;align-items:center;justify-content:center;font-size:5cqw;line-height:1.6}
+.tn{transform:translate(-50%,-50%);font-size:3.3cqw}
+/* matte pill buttons */
+.pill{--pc:var(--acc);position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;height:56px;padding:0 22px 0 6px;border-radius:99px;font:inherit;font-weight:700;font-size:18px;white-space:nowrap;text-decoration:none;cursor:pointer;background:linear-gradient(165deg,color-mix(in srgb,var(--pc) 72%,#fff) 0%,var(--pc) 45%,color-mix(in srgb,var(--pc) 82%,#000) 100%);color:#fff;border:1px solid color-mix(in srgb,var(--pc) 70%,#000);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -2px 6px rgba(0,0,0,.12),0 10px 24px -6px color-mix(in srgb,var(--pc) 70%,transparent),0 3px 8px rgba(0,0,0,.35);transition:transform .18s,box-shadow .18s}
+.pill:active{transform:scale(.97)}
+.pill .ic{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#1b1b1f;box-shadow:0 4px 10px rgba(0,0,0,.28),inset 0 -2px 4px rgba(0,0,0,.08)}
+.pill .tx{flex:1;text-align:center}
+.pill.sm{height:48px;font-size:16px;padding:0 14px 0 5px}.pill.sm .ic{width:38px;height:38px}
+.pill.ghost{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 16px rgba(0,0,0,.3)}
+.pill.ghost .ic{background:rgba(255,255,255,.14);color:#fff;box-shadow:none}
+.pill[disabled]{opacity:.35;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.card .pic,.card .glass{animation:none}.land span{animation:none}body::before,body::after{animation:none}*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section id="home">
+    <header><div class="logo">جینیەس <b>ستۆری</b></div><div class="hpill">کتێبی تایبەت</div></header>
+    <h1>منداڵەکەت دەبێتە <span>پاڵەوانی چیرۆک</span></h1>
+    <p class="sub">چیرۆکێک هەڵبژێرە و نموونەی لاپەڕەکانی ببینە.</p>
+    <div class="shelf" id="shelfB"></div>
+    <div class="shelf" id="shelfG"></div>
+  </section>
+
+  <section id="story">
+    <div class="top"><button class="back" id="back" aria-label="گەڕانەوە">→</button><h2 id="sTitle"></h2><span class="tag" id="sTag"></span></div>
+    <button class="pill land2" id="land"><span class="tx">بیکە بە پانی و بیخوێنەرەوە</span><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><rect x="3" y="7" width="18" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 4.5a6 6 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button>
+    <div class="layout">
+     <div><div class="stage" id="stage"><div class="book" id="book"></div></div><div class="dots" id="dots"></div></div>
+     <div><div class="intro" id="intro" hidden><b>✨ لەم کتێبەدا تەنها ٢ لاپەڕەی سەرەتا بە وێنە کراوە</b><span>تا ببینیت وێنەی منداڵەکەت چۆن دەگۆڕێت. لە لاپەڕەکانی تردا، وێنەی منداڵەکەت لە شوێنی خۆی دادەنرێت.</span></div><div class="text" id="txt"></div>
+     <div class="nav"><button class="pill sm ghost" id="prev"><span class="ic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="tx">پێشوو</span></button><button class="pill sm ghost" id="next"><span class="tx">دواتر</span><span class="ic"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div></div>
+    </div>
+    <button class="pill ordb" id="order2"><span class="tx">ئەم چیرۆکە بۆ منداڵەکەم</span><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    <p class="note">ئەمە نموونەیە؛ لە کتێبەکەدا منداڵی خۆتان دەبێتە پاڵەوانەکە.</p>
+  </section>
+</div>
+<div id="sheet" hidden>
+ <div class="sbg" id="sbg"></div>
+ <form class="sp" id="ordf" novalidate>
+  <span class="grab"></span>
+  <div class="shead"><img id="sImg" alt=""><div><b id="sName"></b><small>کتێبی ٣٢ لاپەڕەیی تایبەت</small></div><button type="button" class="sx" id="sx" aria-label="داخستن">✕</button></div>
+  <label class="fl"><span>ناوی منداڵەکە</span><input id="fName" autocomplete="off" placeholder="بۆ نموونە: ئارام"></label>
+  <label class="fl"><span>ژمارەی مۆبایل</span><input id="fPhone" type="tel" inputmode="tel" dir="ltr" placeholder="07xx xxx xxxx"></label>
+  <label class="fl"><span>ناونیشان</span><textarea id="fAddr" rows="2" placeholder="شار، گەڕەک، نزیک..."></textarea></label>
+  <a class="pill send" id="send" href="#" target="_blank" rel="noopener"><span class="tx">ناردنی داواکاری بۆ واتسئاپ</span><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+  <p class="snote">دوای ناردن، وێنەی منداڵەکەتان لە واتسئاپ بۆمان بنێرن.</p>
+ </form>
+</div>
+<div id="reader" hidden><div id="rot">
+<button class="rb" id="rclose"><span class="rc"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="rl">داخستن</span></button>
+<button class="rb" id="rprev"><span class="rc"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="rl">پێشوو</span></button>
+<button class="rb" id="rnext"><span class="rc"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="rl">دواتر</span></button>
+<div class="rhint" id="rhint">پەنجە ڕابکێشە یان دوگمەکان دابگرە بۆ هەڵدانەوەی لاپەڕە</div>
+</div></div>
+<script>
+{
+const S={
+lion:{g:'چیرۆکی کوڕان',i:'l',t:'شێر و مشک',d:'شێر و مشک',c:'#ff9a1f',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+['ڕۆژێکی خۆر','ئیسام بە جانتا شینەکەیەوە چووە ناو دارستانە سەوزەکە. خۆر لە نێوان دارەکانەوە دەدرەوشایەوە.'],
+['مشکێکی گیراو','ئیسام مشکێکی بچووکی بینی کە لە ژێر لقە دارێکدا گیرابوو. مشکەکە زۆر ترسابوو.'],
+['ڕزگارکردن','ئیسام بە نەرمی لقە دارەکەی هەڵگرت و مشکە بچووکەکە ئازاد بوو.'],
+['هاوڕێی بچووک','مشکەکە چووە سەر لەپی دەستی ئیسام و دەستی بۆ ڕاوەشاند: «سوپاس ئیسام!»'],
+['خۆشاردنەوە','ئیسام و مشکەکە لە نێوان کارگە ڕەنگاوڕەنگەکاندا یاری خۆشاردنەوەیان کرد.'],
+['نانی پێکەوە','لەسەر بەتانییەکی سوور دانیشتن و ئیسام پارچەیەک نانی بە مشکەکە دا.'],
+['بازدان بەسەر ئاودا','ئیسام بەسەر بەردەکانی جۆگەکەدا بازی دا و مشکەکەش لەسەر شانی بوو.'],
+['جێپێی گەورە','ئیسام جێپێیەکی زۆر گەورەی لەسەر قوڕەکە بینی و گوتی: «ئەمە جێپێی کێیە؟!»'],
+['شێرە نووستووەکە','مشکەکە بە پەلە ڕای کرد و بە هەڵە بەسەر لووتی شێرێکی نووستوودا تێپەڕی.'],
+['شێر بەئاگا هات','شێرەکە بەئاگا هات و بە پەنجە گەورەکەی مشکە بچووکەکەی گرت.'],
+['ئیسامی ئازا','ئیسام کەمێک ترسا، بەڵام بە ئازایەتییەوە چووە پێشەوە.'],
+['تکایە بەری بدە','ئیسام بە ڕێزەوە گوتی: «شێرە گەورەکە، تکایە هاوڕێکەم ئازاد بکە.»'],
+['هیوای مشکەکە','مشکەکە سەیری شێرەکەی کرد و گوتی: «ڕۆژێک منیش یارمەتیت دەدەم.»'],
+['پێکەنینی شێر','شێرەکە بە دەنگی بەرز پێکەنی: «مشکێکی ئەوەندە بچووک چۆن یارمەتیی من دەدات؟!»'],
+['ئازادی','شێرەکە پەنجەکەی هەڵگرت و مشکەکە بە خۆشییەوە ڕای کرد.'],
+['خوداحافیزی','ئیسام و مشکەکە دەستیان بۆ شێرە میهرەبانەکە ڕاوەشاند.'],
+['تۆڕی نهێنی','چەند ڕۆژێک دواتر، تۆڕێکی گەورە لە نێوان دارەکاندا شاردرابووەوە.'],
+['شێر گیرا','شێرەکە بە دارستاندا دەڕۆیشت و لەناکاو کەوتە ناو تۆڕەکەوە.'],
+['داوای یارمەتی','شێرەکە نەڕاندی و داوای یارمەتی کرد. باڵندەکان ترسان و فڕین.'],
+['دەنگێکی دوور','ئیسام لە دوورەوە گوێی لە نەڕەی شێرەکە بوو و گوتی: «ئەمە دەنگی هاوڕێکەمانە!»'],
+['بە خێرایی','ئیسام بە خێرایی ڕای کرد و مشکەکەش بە توندی شانی گرتبوو.'],
+['شێری دڵتەنگ','شێرەکەیان بینی کە لە ناو تۆڕەکەدا گیرابوو و زۆر دڵتەنگ بوو.'],
+['پەتی بەهێز','ئیسام بە هەموو هێزی پەتەکەی ڕاکێشا، بەڵام پەتەکە نەپچڕا.'],
+['بیرۆکەیەکی زیرەک','مشکەکە زەردەخەنەیەکی کرد و ئاماژەی بۆ ددانە تیژەکانی کرد.'],
+['کاری پێکەوەیی','ئیسام تۆڕەکەی ڕاگرت و مشکەکەش پەتەکانی کرۆشت.'],
+['پچڕانی پەت','پەتەکان یەک لە دوای یەک پچڕان!'],
+['شێر ئازاد بوو','شێرەکە بە خۆشییەوە لە تۆڕەکە بازی دایە دەرەوە.'],
+['سوپاسی شێر','شێرەکە سەری بۆ مشکەکە دانواند و گوتی: «سوپاس هاوڕێ بچووکەکەم!»'],
+['سواری شێر','ئیسام و مشکەکە سواری پشتی شێرەکە بوون و بە دارستاندا گەڕان.'],
+['خۆرئاوابوون','هەر سێ هاوڕێ لەسەر گردێک دانیشتن و سەیری خۆرئاوابوونیان کرد.'],
+['تا دیدارێکی تر','ئیسام دەستی بۆ شێرەکە ڕاوەشاند و مشکەکەش لە گیرفانیدا بوو.'],
+['چیرۆکی شەو','ئیسام چیرۆکەکەی بۆ دایکی گێڕایەوە: «هیچ کەسێک بچووک نییە بۆ یارمەتیدان!»']]},
+turtle:{g:'چیرۆکی کوڕان',f:'turtle_',t:"کیسەڵ و کەروێشک",d:"کیسەڵ",c:'#1fa0ff',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["دارستانی گوێز","ڕۆژێکی بەهاری، ئیسام چووە دارستانی گوێز لە پاڵ چیاکە تا هاوڕێ ئاژەڵەکانی ببینێت."],
+["کەروێشکی خێرا","کەروێشکێکی سپی بە خێرایی بەلایدا ڕای کرد و هاواری کرد: «من خێراترین ئاژەڵی دارستانم!»"],
+["کیسەڵی هێواش","لە نزیک کانییەکە، کیسەڵێکی پیر بە هێواشی دەڕۆیشت و زەردەخەنەی دەکرد."],
+["گاڵتەپێکردن","کەروێشکەکە بە کیسەڵەکە پێکەنی: «تۆ ئەوەندە هێواشیت، تا ئێوارە ناگەیتە هیچ شوێنێک!»"],
+["داوای پێشبڕکێ","کیسەڵەکە بە ئارامی گوتی: «با پێشبڕکێ بکەین، بزانین کێ زووتر دەگاتە دار چنارە گەورەکە.»"],
+["دادوەری پێشبڕکێ","ئاژەڵەکان کۆبوونەوە و ئیسامیان کرد بە دادوەری پێشبڕکێکە."],
+["هێڵی دەستپێک","ئیسام ئاڵایەکی سووری بەرز کردەوە و هاواری کرد: «یەک، دوو، سێ... دەست پێبکەن!»"],
+["ڕاکردنی کەروێشک","کەروێشکەکە وەک با ڕای کرد و لە چاوترووکانێکدا دوور کەوتەوە."],
+["هەنگاو بە هەنگاو","کیسەڵەکە هەنگاو بە هەنگاو دەڕۆیشت و هەرگیز نەدەوەستا."],
+["ئاوڕدانەوە","کەروێشکەکە ئاوڕی دایەوە و کیسەڵەکەی نەبینی. گوتی: «ئەو هێشتا لە سەرەتای ڕێگاکەدایە!»"],
+["گێزەرە شیرینەکان","کەروێشکەکە کێڵگەیەکی گێزەری بینی و بڕیاری دا کەمێک بخوات."],
+["سێبەری دار","دوای خواردن، لە ژێر سێبەری دارێکدا پاڵکەوت و گوتی: «تەنها کەمێک پشوو دەدەم.»"],
+["خەوێکی قووڵ","چاوەکانی قورس بوون و خەوێکی قووڵ بردییەوە."],
+["کیسەڵی بەردەوام","لەو کاتەدا کیسەڵەکە لە ژێر خۆرە گەرمەکەدا هەر بەردەوام بوو."],
+["تێپەڕین","کیسەڵەکە بە هێواشی بە تەنیشت کەروێشکە نووستووەکەدا تێپەڕی."],
+["هاندان","ئیسام بە دەنگی بەرز هانی دا: «ئافەرین کیسەڵ! بەردەوام بە!»"],
+["سەرکەوتن بە گرد","ڕێگاکە بەرز بوو و کیسەڵەکە ماندوو بوو، بەڵام وازی نەهێنا."],
+["پەڕینەوەی جۆگە","کیسەڵەکە بەسەر بەردەکانی جۆگەکەدا بە وریایی پەڕییەوە."],
+["گۆرانیی باڵندەکان","باڵندەکان لەسەر دارەکان گۆرانییان دەگوت و هانی کیسەڵەکەیان دەدا."],
+["دار چنارەکە","خۆر بەرەو ئاوابوون دەچوو و دار چنارە گەورەکە لە دوورەوە دەرکەوت."],
+["بەئاگاهاتن","کەروێشکەکە لەناکاو بەئاگا هات و گوتی: «ئاخ! چەندم خەوتووە؟»"],
+["ڕاکردنی بەپەلە","بە هەموو هێزی ڕای کرد و گوێیە درێژەکانی لەگەڵ بادا دەلەرزین."],
+["یەک هەنگاو","بەڵام کاتێک نزیک بووەوە، کیسەڵەکە تەنها یەک هەنگاوی مابوو."],
+["هێڵی کۆتایی","کیسەڵەکە یەکەم کەس بوو کە گەیشتە دار چنارەکە!"],
+["ئاهەنگ","ئاژەڵەکان چەپڵەیان لێدا و ئیسام تاجێکی گوڵی لەسەر سەری کیسەڵەکە دانا."],
+["شەرمەزاری","کەروێشکەکە گەیشت، سەری داخست و زۆر شەرمەزار بوو."],
+["داوای لێبوردن","کەروێشکەکە گوتی: «ببورە کیسەڵ، نەدەبوو گاڵتەت پێ بکەم.»"],
+["دوو هاوڕێ","کیسەڵەکە بە نەرمی گوتی: «خێرایی باشە، بەڵام بەردەوامی گرنگترە.» و بوونە هاوڕێ."],
+["وانەی ڕۆژەکە","ئیسام بیری کردەوە: «هەر کارێک بە بەردەوامی بکەیت، دەگەیتە ئامانجەکەت.»"],
+["گەڕانەوە","ئیسام لەگەڵ هاوڕێ نوێکانی بە ڕێگای دارستانەکەدا گەڕایەوە ماڵەوە."],
+["ئەرکی قوتابخانە","ئەو شەوە ئیسام ئەرکەکانی هێواش هێواش و بێ وازهێنان تەواو کرد."],
+["خەونی خۆش","ئیسام بە زەردەخەنەوە خەوت و خەونی بە کیسەڵە ئازاکەوە بینی."]]},
+crow:{g:'چیرۆکی کوڕان',f:'crow_',t:"قەلە زیرەکەکە",d:"قەلە",c:'#7a4cf0',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["هاوینی گەرم","هاوینێکی زۆر گەرم بوو و ئیسام لەگەڵ باپیرەی چووبوونە باخەکە."],
+["زەوی وشک","کانییەکان وشک ببوون و گوڵەکان لە تینوویەتیدا سەریان داخستبوو."],
+["قەلە تینووەکە","قەلەیەکی ڕەش بە ماندوویی فڕی و گوتی: «ئاخ، چەند تینوومە!»"],
+["گەڕان بۆ ئاو","قەلەکە بەسەر باخەکەدا فڕی و لە هەموو لایەک بەدوای ئاودا گەڕا."],
+["گۆزە کۆنەکە","لە ژێر دار هەنارێکدا، گۆزەیەکی قوڕینی کۆنی بینی."],
+["ئاوێکی کەم","قەلەکە سەیری ناو گۆزەکەی کرد. ئاوێکی کەم لە بنیدا هەبوو."],
+["دەنووکی کورت","دەنووکی خستە ناو گۆزەکەوە، بەڵام نەگەیشتە ئاوەکە."],
+["هەوڵی دووەم","خۆی درێژتر کرد، بەڵام هەر نەگەیشت. قەلەکە دڵتەنگ بوو."],
+["سەیرکردن","ئیسام لە پشت دارەکەوە بە سەرسوڕمانەوە سەیری قەلەکەی دەکرد."],
+["گۆزەی قورس","قەلەکە ویستی گۆزەکە لار بکاتەوە، بەڵام گۆزەکە زۆر قورس بوو."],
+["بیرکردنەوە","قەلەکە لەسەر لقێک دانیشت و بە وردی بیری کردەوە."],
+["بیرۆکەیەک","لەناکاو چاوەکانی درەوشانەوە. بەردە بچووکەکانی سەر زەوی بینی."],
+["یەکەم بەرد","قەلەکە بەردێکی بچووکی هەڵگرت و خستییە ناو گۆزەکەوە. «تلپ!»"],
+["دووەم بەرد","بەردێکی تری خستە ناو گۆزەکە، و ئاوەکە کەمێک بەرز بووەوە."],
+["بەرد لە دوای بەرد","قەلەکە بەرد لە دوای بەرد دەهێنا، بە ئارامی و بێ ماندووبوون."],
+["ئیسام دەژمێرێت","ئیسام بە دەنگی بەرز دەیژمارد: «یەک، دوو، سێ، چوار...»"],
+["ئاو بەرز دەبێتەوە","هەر بەردێک دەکەوتە ناو گۆزەکە، ئاوەکە بەرزتر دەبووەوە."],
+["نزیک بووەوە","ئاوەکە گەیشتە نیوەی گۆزەکە و قەلەکە دڵخۆش بوو."],
+["دوایین بەرد","قەلەکە دوایین بەردی هێنا و ئاوەکە گەیشتە دەمی گۆزەکە."],
+["ئاوی سارد","قەلەکە بە خۆشییەوە ئاوە ساردەکەی خواردەوە."],
+["ئافەرین قەلە!","ئیسام چەپڵەی لێدا و گوتی: «ئافەرین! تۆ زۆر زیرەکیت!»"],
+["هاوڕێیەتی","قەلەکە بە دەوری ئیسامدا فڕی و لەسەر شانی نیشتەوە."],
+["قسەی باپیرە","باپیرە گوتی: «کاتێک ڕێگایەک داخرا، بیر بکەرەوە و ڕێگایەکی تر بدۆزەرەوە.»"],
+["تۆپە ونبووەکە","چەند ڕۆژێک دواتر، تۆپەکەی ئیسام کەوتە ناو لوولەیەکی قووڵەوە."],
+["دەستی کورت","ئیسام دەستی خستە ناو لوولەکەوە، بەڵام نەگەیشتە تۆپەکە."],
+["قەلەکە چی کرد؟","ئیسام بیری کەوتەوە: «قەلە زیرەکەکە چی کرد؟»"],
+["بیرۆکەی ئاو","ئیسام سەتڵێک ئاوی هێنا و بە وریایی کردییە ناو لوولەکەوە."],
+["تۆپی سەر ئاو","تۆپەکە لەسەر ئاوەکە هاتە سەرەوە، وەک کەشتییەکی بچووک!"],
+["سەرکەوتن","ئیسام تۆپەکەی گرت و بە خۆشییەوە هاواری کرد: «سەرکەوتم!»"],
+["قەلە دەگەڕێتەوە","قەلەکە لەسەر دیوارەکە دانیشتبوو و وەک ئەوەی بڵێت «ئافەرین» قاڕاندی."],
+["چیرۆکی شەو","ئەو شەوە ئیسام چیرۆکی قەلەکەی بۆ خوشکە بچووکەکەی گێڕایەوە."],
+["مێشکی زیرەک","ئیسام بە زەردەخەنەوە خەوت و گوتی: «بیرکردنەوە لە هێز گرنگترە!»"]]},
+wind:{g:'چیرۆکی کوڕان',f:'wind_',t:"با و خۆر",d:"با و خۆر",c:'#ff8a2a',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["گوندێکی جوان","ئیسام لە گوندێکی جوانی ناو چیاکانی کوردستان دەژیا."],
+["سەردانی داپیرە","ڕۆژێک دایکی گوتی: «ئیسام، ئەم نانە گەرمە بۆ داپیرەت ببە.»"],
+["چاکەتە شینەکە","ئیسام چاکەتە شینەکەی لەبەر کرد و سەبەتە نانەکەی هەڵگرت."],
+["ئاسمانی چیا","لە ئاسمانی سەر چیاکان، با و خۆر سەیری خوارەوەیان دەکرد."],
+["بای لووتبەرز","با بە دەنگێکی گڕ گوتی: «من لە تۆ بەهێزترم، خۆر!»"],
+["خۆری ئارام","خۆر زەردەخەنەیەکی کرد و گوتی: «با تاقی بکەینەوە.»"],
+["تاقیکردنەوە","خۆر گوتی: «هەرکەسمان چاکەتەکەی ئەو منداڵە دابکەنێت، ئەو بەهێزترە.»"],
+["یەکەم هەوڵی با","با فووی کرد و گەڵاکان بەسەر ڕێگاکەدا فڕین."],
+["ئیسام دەلەرزێت","ئیسام لەرزی و چاکەتەکەی توندتر لە خۆی پێچا."],
+["بای بەهێزتر","با زیاتر و زیاتر فووی کرد و دارەکان چەمانەوە."],
+["گرتنی سەبەتە","ئیسام بە یەک دەست سەبەتەکەی گرت و بە دەستەکەی تر چاکەتەکەی."],
+["کڵاوی فڕیو","کڵاوەکەی ئیسام فڕی، بەڵام چاکەتەکەی هەر لەبەریدا بوو."],
+["بای ماندوو","با هەموو هێزی خۆی بەکارهێنا، تا خۆی ماندوو بوو."],
+["با وازی هێنا","با هەناسەبڕکێی بوو و گوتی: «ناتوانم! ئەو منداڵە زۆر بەهێزە.»"],
+["نۆرەی خۆر","خۆر گوتی: «ئێستا نۆرەی منە.» و لە پشت هەورەکانەوە دەرکەوت."],
+["تیشکی گەرم","خۆر بە نەرمی تیشکە گەرمەکانی ناردە سەر گوندەکە."],
+["گەرمییەکی خۆش","ئیسام هەستی بە گەرمییەکی خۆش کرد و زەردەخەنەی کرد."],
+["پەپوولەکان","خۆر کەمێکی تر گەرمی کرد و پەپوولەکان لە نێوان گوڵەکاندا دەرکەوتن."],
+["داکەندنی چاکەت","ئیسام گوتی: «ئۆف، چەند گەرمە!» و چاکەتەکەی داکەند."],
+["بردنەوەی خۆر","خۆر بە نەرمی پێکەنی و با سەری سوڕما."],
+["پرسیاری با","با پرسی: «چۆن توانیت؟ من بە هەموو هێزم نەمتوانی!»"],
+["وەڵامی خۆر","خۆر گوتی: «نەرمی و میهرەبانی لە زۆرداری بەهێزترە.»"],
+["ماڵی داپیرە","ئیسام گەیشتە ماڵی داپیرەی و داپیرەی بە گەرمی لە باوەشی گرت."],
+["نانی گەرم","پێکەوە لە ژێر دار توودا دانیشتن و نانە گەرمەکەیان خوارد."],
+["چیرۆکی ڕێگا","ئیسام گوتی: «داپیرە، با ویستی چاکەتەکەم ببات، بەڵام نەیتوانی!»"],
+["قسەی داپیرە","داپیرە پێکەنی: «ڕۆڵە، قسەی خۆش دڵ نەرم دەکات، وەک خۆر.»"],
+["گەڕانەوە","ئێوارە ئیسام بە ڕێگای گوندەکەدا گەڕایەوە ماڵەوە."],
+["برا بچووکەکە","لە ماڵەوە، برا بچووکەکەی یارییەکەی نەدەدایە ئیسام."],
+["ڕێگای خۆر","ئیسام بیری کەوتەوە: «ئەگەر هاوار بکەم، توندتر دەیگرێت، وەک چاکەتەکە.»"],
+["قسەی نەرم","ئیسام بە نەرمی گوتی: «با پێکەوە یاری بکەین؟» و براکەی زەردەخەنەی کرد."],
+["یاری پێکەوە","هەردووکیان بە خۆشییەوە پێکەوە یارییان کرد."],
+["سوپاس خۆر","ئیسام لە پەنجەرەکەوە سەیری خۆرئاوابوونی کرد و گوتی: «سوپاس خۆر، فێرت کردم.»"]]},
+ant:{g:'چیرۆکی کوڕان',f:'ant_',t:"مێروولە و کوللە",d:"مێروولە",c:'#e8283c',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["هاوینی سەوز","لە هاوینێکی جوان، ئیسام لە نزیک کێڵگە گەنمەکەی باپیرەی یاری دەکرد."],
+["مێروولەکان","ئیسام ڕیزێک مێروولەی بینی کە دانەوێڵەیان هەڵدەگرت."],
+["مێروولەی بچووک","مێروولەیەکی بچووک دانەیەکی گەنمی گەورەی بە پشتیەوە بوو."],
+["یارمەتیی ئیسام","ئیسام گەڵایەکی دانا تا مێروولەکە بە ئاسانی پێیدا بڕوات."],
+["کوللە گۆرانیبێژەکە","لەسەر گوڵێک، کوللەیەکی سەوز کەمانچەی لێدەدا و گۆرانی دەگوت."],
+["بانگهێشتن","کوللەکە گوتی: «مێروولە، وەرە با یاری بکەین و گۆرانی بڵێین!»"],
+["ئامادەکاری","مێروولەکە گوتی: «ناتوانم، دەبێت خواردن بۆ زستان کۆ بکەمەوە.»"],
+["پێکەنینی کوللە","کوللەکە پێکەنی: «زستان؟ زستان هێشتا زۆر دوورە!»"],
+["کاری ڕۆژانە","هەموو ڕۆژێک مێروولەکان کاریان دەکرد و ماڵە بچووکەکەیان پڕ دەکرد."],
+["ڕۆژانی یاری","هەموو ڕۆژێکیش کوللەکە گۆرانی دەگوت و لە ژێر خۆردا دەخەوت."],
+["هاوکاری","ئیسام هەندێک جار یارمەتیی مێروولەکانی دەدا و دانەوێڵەی بۆ کۆ دەکردنەوە."],
+["پاییز","پاییز هات. گەڵاکان زەرد بوون و کەوتنە خوارەوە."],
+["هەوای سارد","با سارد بوو و گوڵەکان چلمسین. کوللەکە کەمێک لەرزی."],
+["خواردن نەما","کوللەکە بەدوای خواردندا گەڕا، بەڵام هیچی نەدۆزییەوە."],
+["یەکەم بەفر","زستان هات و بەفرێکی سپی هەموو گوندەکەی داپۆشی."],
+["بەفرە پیاو","ئیسام بە جلی گەرمەوە لە بەفرەکەدا یاری دەکرد و بەفرە پیاوێکی دروست کرد."],
+["کوللەی برسی","ئیسام کوللەکەی بینی کە لە سەرمادا دەلەرزی و زۆر برسی بوو."],
+["دڵی میهرەبان","ئیسام گوتی: «ئای! کوللەی بەستەزمان، دەبێت یارمەتیت بدەین.»"],
+["لە دەرگادان","ئیسام کوللەکەی هێنا بۆ لای ماڵی مێروولەکان و لە دەرگاکەی دا."],
+["دەرگا کرایەوە","مێروولەکە دەرگاکەی کردەوە و کوللە برسییەکەی بینی."],
+["شەرمی کوللە","کوللەکە بە شەرمەوە گوتی: «ببورن... من هیچ خواردنێکم کۆ نەکردۆتەوە.»"],
+["میوانداری","مێروولەکە زەردەخەنەی کرد: «فەرموو وەرە ژوورەوە، میوانی ئێمەیت.»"],
+["ماڵی گەرم","ماڵی مێروولەکان گەرم و ڕووناک بوو، و خواردنی زۆری تێدا بوو."],
+["خواردنی پێکەوە","مێروولەکان دانەوێڵە و هەنگوینیان بۆ کوللەکە دانا."],
+["سوپاس","کوللەکە بە چاوی پڕ لە فرمێسکەوە گوتی: «سوپاس، هەرگیز ئەم چاکەیە لەبیر ناکەم.»"],
+["گۆرانیی زستان","کوللەکە کەمانچەکەی دەرهێنا و گۆرانییەکی خۆشی بۆ هەمووان گوت."],
+["شەوێکی خۆش","هەمووان سەمایان کرد و شەوی زستان بوو بە ئاهەنگ."],
+["بەڵێنی کوللە","کوللەکە گوتی: «هاوینی داهاتوو منیش کار دەکەم و یارمەتیتان دەدەم.»"],
+["بەهار","بەهار هات و گوڵەکان دیسان پشکوتن."],
+["کاری پێکەوە","ئەمجارە کوللەکە لەگەڵ مێروولەکان کاری دەکرد و گۆرانیشی بۆ دەگوتن."],
+["وانەی ئیسام","ئیسام گوتی: «کارکردن و یارمەتیدان پێکەوە، هەموومان دڵخۆش دەکات.»"],
+["کۆتایی خۆش","ئیسام لەگەڵ هاوڕێ بچووکەکانی لە ژێر خۆری بەهاردا پێکەنین."]]},
+duck:{g:'چیرۆکی کچان',f:'duck_',t:"جوجکە جیاوازەکە",d:"جوجکە",c:'#2f6bff',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["گۆلی گوند","سارا هەموو بەیانییەک دەچووە لای گۆلە شینەکەی گوندەکەیان."],
+["هێلکەکانی مراوی","لە ناو گیاکاندا، مراوییەکی دایک لەسەر هێلکەکانی دانیشتبوو."],
+["هێلکەیەکی گەورە","سارا تێبینی کرد یەکێک لە هێلکەکان لە هەموویان گەورەتر بوو."],
+["جوجکە زەردەکان","هێلکەکان شکان و جوجکەی زەرد و بچووک هاتنە دەرەوە."],
+["دوایین هێلکە","دوایین هێلکە شکا و جوجکەیەکی خۆڵەمێشی و گەورە دەرکەوت."],
+["جیاواز","جوجکەکە لە براکانی نەدەچوو. ملی درێژتر و پەڕی تۆختر بوو."],
+["گاڵتەپێکردن","جوجکەکانی تر پێی پێدەکەنین: «تۆ ناشیرینیت! لە ئێمە ناچیت!»"],
+["تەنیایی","جوجکە خۆڵەمێشییەکە لە گۆشەیەکدا بە تەنیا دادەنیشت و دڵی دەشکا."],
+["سارا دێتە لای","سارا لە تەنیشتیەوە دانیشت و گوتی: «بۆچی تەنیایت، هاوڕێ بچووکەکەم؟»"],
+["هاوڕێیەتی","سارا پارچەیەک نانی پێدا و بە نەرمی دەستی بە پەڕەکانیدا هێنا."],
+["ناوێکی نوێ","سارا گوتی: «ناوت دەنێم \"خۆڵە\". تۆ هاوڕێی منیت.»"],
+["ڕۆیشتن","بەڵام گاڵتەپێکردنەکان زۆر بوون، و خۆڵە بڕیاری دا بڕوات."],
+["گەڕان","سارا بەدوایدا گەڕا و بانگی کرد: «خۆڵە! لە کوێیت؟»"],
+["کەناری ڕووبار","خۆڵە لە کەناری ڕووبارێکی دوور، بە تەنیا مەلەی دەکرد."],
+["پاییز","پاییز هات و گەڵاکان کەوتن. خۆڵە باڵندە کۆچکەرەکانی بینی کە دەفڕین."],
+["باڵندە سپییەکان","باڵندەی سپی و جوان بە ئاسماندا دەفڕین. خۆڵە گوتی: «خۆزگە وەک ئەوان بوومایە.»"],
+["زستانی سارد","زستان هات و ئاوی گۆلەکە بەستی. خۆڵە زۆر سەرمای بوو."],
+["دۆزینەوە","سارا لەگەڵ باوکی، خۆڵەیان لە ناو بەفرەکەدا دۆزییەوە."],
+["ماڵی گەرم","سارا خۆڵەی بردەوە ماڵەوە و لە نزیک سۆبەکە جێگایەکی گەرمی بۆ دانا."],
+["چاودێری","هەموو زستان سارا خواردنی دەدایە و گۆرانیی بۆ دەگوت."],
+["بەهار","بەهار هات و بەفرەکان توانەوە. خۆڵە گەورە ببوو."],
+["بۆ لای گۆل","سارا خۆڵەی برد بۆ لای گۆلەکە تا دیسان مەلە بکات."],
+["وێنە لە ئاودا","خۆڵە سەیری ئاوەکەی کرد و بە سەرسوڕمانەوە وێنەی خۆی بینی."],
+["قوویەکی سپی","ئەو ئیتر جوجکەی خۆڵەمێشی نەبوو، بەڵکو قوویەکی سپی و جوان بوو!"],
+["سەرسوڕمان","سارا چەپڵەی لێدا: «خۆڵە! تۆ قوویت! زۆر جوانیت!»"],
+["قووەکانی تر","سێ قووی سپی هاتنە لای و بە خۆشییەوە پێشوازییان لێکرد."],
+["داوای لێبوردن","جوجکەکانی تر سەریان سوڕما و داوای لێبوردنیان کرد."],
+["دڵی گەورە","خۆڵە لێیان خۆشبوو و گوتی: «با هەمووان هاوڕێ بین.»"],
+["فڕین","خۆڵە باڵە سپییەکانی کردەوە و بەسەر گۆلەکەدا فڕی."],
+["هاوڕێی وەفادار","خۆڵە بە دەوری سارادا سووڕایەوە و هاتەوە لای، چونکە هەرگیز هاوڕێکەی لەبیر نەکرد."],
+["وانەی سارا","سارا گوتی: «هەموو کەسێک بە شێوەی خۆی جوانە.»"],
+["هاوڕێی هەمیشەیی","هەموو بەیانییەک سارا و خۆڵە لە کەناری گۆلەکە پێکەوە دادەنیشتن."]]},
+hen:{g:'چیرۆکی کچان',f:'hen_',t:"مریشکە سوورەکە",d:"مریشک",c:'#ff4fa0',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["گوندی داپیرە","لە پشووی هاویندا، سارا چوو بۆ ماڵی داپیرەی لە گوند."],
+["حەوشەی ماڵ","لە حەوشەکەدا مریشکێکی سوور، پشیلەیەک، سەگێک و مراوییەک دەژیان."],
+["دانە گەنم","ڕۆژێک مریشکە سوورەکە چەند دانەیەک گەنمی دۆزییەوە."],
+["کێ دەیچێنێت؟","مریشکەکە پرسی: «کێ یارمەتیم دەدات ئەم گەنمە بچێنین؟»"],
+["من نا!","پشیلەکە گوتی: «من نا.» سەگەکە گوتی: «من نا.» مراوییەکەش گوتی: «من نا.»"],
+["یارمەتیی سارا","سارا گوتی: «من یارمەتیت دەدەم!» و پێکەوە گەنمەکەیان چاند."],
+["ئاودان","هەموو ڕۆژێک سارا و مریشکەکە ئاویان دەدا."],
+["گەنمی زێڕین","گەنمەکە گەورە بوو و زێڕین بوو، وەک ڕووناکیی خۆر."],
+["کێ دەیدروێنێت؟","مریشکەکە پرسی: «کێ یارمەتیم دەدات گەنمەکە بدروێنین؟»"],
+["دیسان من نا","هەر سێکیان گوتیان: «من نا، ماندووین.» و لە ژێر سێبەردا خەوتن."],
+["درووێنە","سارا و مریشکەکە بە داسێکی بچووک گەنمەکەیان دروێنە کرد."],
+["ئاش","مریشکەکە پرسی: «کێ یارمەتیم دەدات بیبەینە ئاشەکە؟»"],
+["هەمان وەڵام","پشیلە و سەگ و مراوی هەر گوتیان: «من نا!»"],
+["ئاشی گوند","سارا و مریشکەکە کیسە گەنمەکەیان بردە ئاشە کۆنەکەی کەناری ڕووبارەکە."],
+["ئاردی سپی","بەردی ئاشەکە سووڕایەوە و گەنمەکە بوو بە ئاردێکی سپی و نەرم."],
+["کێ هەویر دەکات؟","مریشکەکە پرسی: «کێ یارمەتیم دەدات هەویر بکەین؟»"],
+["هەر یاری","هەر سێکیان گوتیان: «من نا!» و هەر یارییان دەکرد."],
+["هەویرشێلان","سارا و داپیرە و مریشکەکە پێکەوە هەویرێکی نەرمیان شێلا."],
+["تەنوور","داپیرە نانەکانی خستە ناو تەنوورە گەرمەکەوە."],
+["بۆنی نان","بۆنی نانی گەرم بە هەموو گوندەکەدا بڵاو بووەوە."],
+["هەمووان هاتن","پشیلە و سەگ و مراوی بە پەلە هاتن: «ئێمەش نانمان دەوێت!»"],
+["پرسیاری مریشک","مریشکەکە پرسی: «کێ یارمەتیی دا لە چاندن و درووێنە و هەویرکردندا؟»"],
+["بێدەنگی","هەر سێکیان بێدەنگ بوون و سەریان داخست."],
+["شەرمەزاری","پشیلەکە بە شەرمەوە گوتی: «ئێمە هیچمان نەکرد.»"],
+["بڕیاری سارا","سارا سەیری داپیرەی کرد. داپیرە بە نەرمی سەری لەقاند."],
+["بەشکردن","مریشکەکە گوتی: «ئەمجارە نان بە هەمووان دەدەین، بەڵام...»"],
+["بەڵێن","«...جاری داهاتوو هەمووان پێکەوە کار دەکەین.» هەمووان گوتیان: «بەڵێن!»"],
+["سفرەی نان","هەمووان لە دەوری سفرەکە دانیشتن و نانی گەرمیان بە پەنیرەوە خوارد."],
+["بەهاری داهاتوو","بەهاری داهاتوو، هەمووان پێکەوە گەنمیان چاند."],
+["کاری پێکەوە","پشیلە ئاوی دەدا، سەگ کیسەکەی هەڵدەگرت و مراوی یارمەتیی هەویری دەدا."],
+["وانەی سارا","سارا گوتی: «کاری پێکەوە، کارێکی قورس سووک دەکات.»"],
+["خوداحافیزی","سارا دەستی بۆ هاوڕێکانی ڕاوەشاند و بەڵێنی دا ساڵی داهاتوو بگەڕێتەوە."]]},
+partridge:{g:'چیرۆکی کچان',f:'partridge_',t:"کەو و مێروولە",d:"کەو",c:'#9b4dff',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["کانیی چیا","سارا لەگەڵ داپیرەی چوو بۆ کانییە ساردەکەی پاڵ چیاکە."],
+["کەوە جوانەکە","کەوێکی جوان بە پەڕی خاڵخاڵەوە لەسەر بەردێک دانیشتبوو و دەیخوێند."],
+["مێروولەی تینوو","مێروولەیەکی بچووک هات بۆ ئەوەی لە کانییەکە ئاو بخواتەوە."],
+["کەوتن بۆ ناو ئاو","لەناکاو پێی خلیسکا و کەوتە ناو ئاوە ساردەکەوە!"],
+["داوای یارمەتی","مێروولەکە هاواری کرد: «یارمەتی! ناتوانم مەلە بکەم!»"],
+["کەو گوێی لێبوو","کەوەکە گوێی لە دەنگە لاوازەکە بوو و سەیری ئاوەکەی کرد."],
+["گەڵایەک","کەوەکە گەڵایەکی گەورەی لە دارەکە کردەوە و خستییە سەر ئاوەکە."],
+["سەرکەوتن بۆ گەڵا","مێروولەکە بە هەموو هێزی خۆی گەیاندە سەر گەڵاکە."],
+["کەناری کانی","گەڵاکە بە ئاوەکەدا هات و گەیشتە کەنارەکە."],
+["ڕزگار بوو","مێروولەکە سەلامەت دابەزی و هەناسەیەکی قووڵی هەڵکێشا."],
+["بەڵێنی مێروولە","مێروولەکە گوتی: «سوپاس کەوی جوان! ڕۆژێک چاکەکەت دەدەمەوە.»"],
+["سارا سەیری دەکات","سارا لە پشت بەردەکەوە هەموو ئەمانەی بینی و زەردەخەنەی کرد."],
+["پرسیاری سارا","سارا پرسی: «داپیرە، مێروولەیەکی بچووک چۆن یارمەتیی کەوێک دەدات؟»"],
+["وەڵامی داپیرە","داپیرە گوتی: «چاوەڕێ بکە کچم، چاکە هەرگیز ون نابێت.»"],
+["ڕۆژێکی تر","چەند ڕۆژێک دواتر، سارا و داپیرە دیسان هاتنەوە بۆ لای کانییەکە."],
+["کەوی نووستوو","کەوەکە لەسەر بەردەکە بە ئارامی خەوی لێکەوتبوو."],
+["ڕێوییەکی فێڵباز","ڕێوییەکی سوور بە هێواشی لە پشت دەوەنەکانەوە نزیک دەبووەوە."],
+["ترسی سارا","سارا ترسا و ویستی هاوار بکات، بەڵام ڕێوییەکە زۆر نزیک بووبووەوە."],
+["مێروولە دەیبینێت","مێروولە بچووکەکە ڕێوییەکەی بینی و گوتی: «دەبێت شتێک بکەم!»"],
+["ڕاکردن","مێروولەکە بە خێرایی ڕای کرد و چووە سەر پەنجەی ڕێوییەکە."],
+["گەستن","مێروولەکە بە هەموو هێزی پەنجەی ڕێوییەکەی گەست!"],
+["هاواری ڕێوی","ڕێوییەکە هاواری کرد: «ئاخ!» و بازی دا."],
+["کەو بەئاگا هات","کەوەکە بە دەنگەکە بەئاگا هات و بە خێرایی فڕی بۆ سەر دارەکە."],
+["ڕێوی ڕای کرد","ڕێوییەکە بە شەرمەزاری و بە پەنجەیەکی ئازاردراوەوە ڕای کرد."],
+["سەلامەتی","کەوەکە لەسەر لقەکە سەیری خوارەوەی کرد و مێروولەکەی بینی."],
+["چاکەی دووبارە","مێروولەکە گوتی: «ئەمڕۆ منیش چاکەکەی تۆم دایەوە!»"],
+["سوپاسی کەو","کەوەکە دابەزی و بە نەرمی گوتی: «سوپاس هاوڕێ ئازاکەم.»"],
+["داپیرە ڕاستی کرد","سارا بە خۆشییەوە چەپڵەی لێدا: «داپیرە ڕاستی دەکرد!»"],
+["گەڕانەوە","سارا بە ڕێگای چیادا گەڕایەوە و بیری لە چیرۆکەکە دەکردەوە."],
+["یارمەتیی هاوڕێ","لە قوتابخانە سارا یارمەتیی هاوڕێیەکی دا کە قەڵەمەکەی ون کردبوو."],
+["سێوی سوور","ڕۆژی دواتر هاوڕێکەی سێوێکی سووری بە دیاری بۆ سارا هێنا."],
+["وانەی سارا","سارا زەردەخەنەی کرد: «چاکە بکە، چاکە دەگەڕێتەوە بۆ لات.»"]]},
+soup:{g:'چیرۆکی کچان',f:'soup_',t:"شۆربای بەرد",d:"شۆربا",c:'#ff7a1a',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["زستانی گوند","زستانێکی سارد بوو و بەفر هەموو گوندەکەی داپۆشیبوو."],
+["دەرگا داخراوەکان","هەموو خەڵک لە ماڵەکانیان بوون و دەرگاکانیان داخستبوو."],
+["سارا و باپیرە","سارا لەگەڵ باپیرەی سەیری گوندە بێدەنگەکەیان دەکرد."],
+["بیرۆکەیەک","سارا گوتی: «باپیرە، با شتێک بکەین هەمووان کۆ ببنەوە.»"],
+["بەردێکی تایبەت","باپیرە بەردێکی لووس و جوانی لە کانییەکە هێنا و چاوێکی لێداگرت."],
+["مەنجەڵی گەورە","سارا و باپیرە مەنجەڵێکی گەورەیان لە ناوەڕاستی گوندەکەدا لەسەر ئاگر دانا."],
+["ئاو و بەرد","ئاویان کردە ناو مەنجەڵەکە و بەردەکەیان خستە ناوی."],
+["جیرانی سەرسام","جیرانێک لە پەنجەرەکەوە پرسی: «ئێوە چی دروست دەکەن؟»"],
+["شۆربای بەرد","سارا بە زەردەخەنەوە گوتی: «شۆربای بەرد! زۆر بەتامە.»"],
+["پیاز","جیرانەکە گوتی: «پیازێکم هەیە، تامی خۆشتر دەکات.» و پیازێکی هێنا."],
+["پەتاتە","ژنێکی پیر گوتی: «منیش پەتاتەم هەیە!» و چەند پەتاتەیەکی هێنا."],
+["گێزەر","منداڵێک بە ڕاکردن هات و گێزەرێکی خستە ناو مەنجەڵەکەوە."],
+["نۆک","خاوەنی دوکانەکە کیسەیەک نۆکی هێنا: «ئەمەش بۆ شۆرباکە!»"],
+["خوێ و بیبەر","داپیرەیەکی تر بە پێکەنینەوە خوێ و بیبەری کرد."],
+["تەماتە","کچێکی بچووک سەبەتەیەک تەماتەی سووری هێنا."],
+["بۆنی خۆش","بۆنێکی خۆش بە هەموو گوندەکەدا بڵاو بووەوە."],
+["دەرگاکان کرانەوە","یەک لە دوای یەک، دەرگاکان کرانەوە و خەڵک هاتنە دەرەوە."],
+["نانی تەنوور","نانەواکە نانی گەرمی تەنووری هێنا."],
+["فەرشی کوردی","کەسێک فەرشێکی جوانی کوردی لەسەر زەوی ڕاخست."],
+["دەف و گۆرانی","پیاوێک دەفی هێنا و گۆرانییەکی کوردیی خۆشی گوت."],
+["ئاگری گەرم","هەمووان لە دەوری ئاگرەکە کۆبوونەوە و دەستیان گەرم کردەوە."],
+["تامکردن","باپیرە کەوچکێکی تامکرد و گوتی: «باشترین شۆربای ژیانمە!»"],
+["دابەشکردن","سارا بە کەوچکێکی گەورە شۆرباکەی بۆ هەمووان دابەش کرد."],
+["هەمووان پێکەوە","گەورە و منداڵ پێکەوە خواردیان و پێکەنین."],
+["هاوڕێی نوێ","منداڵەکان کە پێشتر یەکتریان نەدەناسی، بوونە هاوڕێ."],
+["پرسیارێک","منداڵێک پرسی: «ئایا بەردەکە بەڕاستی شۆرباکەی بەتام کرد؟»"],
+["نهێنییەکە","سارا چاوێکی لێداگرت: «نهێنییەکەی ئەوەیە کە هەمووان شتێکیان هێنا.»"],
+["یادگاری","باپیرە بەردەکەی شت و دایە دەستی سارا: «ئەمە بە یادگاری هەڵبگرە.»"],
+["گوندێکی گەرم","ئەو شەوە، گوندە ساردەکە پڕ بوو لە گەرمی و پێکەنین."],
+["بڕیاری گوند","خەڵکی گوند بڕیاریان دا هەموو مانگێک شۆربای بەرد دروست بکەن."],
+["وانەی سارا","سارا گوتی: «کاتێک هەمووان کەمێک بەش دەکەن، هەمووان تێر دەبن.»"],
+["خەوی خۆش","سارا بەردە بچووکەکەی لە تەنیشت سەرینەکەی دانا و بە زەردەخەنەوە خەوت."]]},
+bears:{g:'چیرۆکی کچان',f:'bears_',t:"سێ ورچەکە",d:"ورچەکان",c:'#e0533a',p:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32],x:[
+["دارستانی چیا","سارا لە گوندێکی نزیک دارستانی چیاکان دەژیا."],
+["کۆکردنەوەی گوڵ","ڕۆژێک سارا چووە ناو دارستانەکە تا گوڵی بەهاری بۆ دایکی کۆ بکاتەوە."],
+["گوڵی جوانتر","هەر گوڵێکی دەبینی، گوڵێکی جوانتری لە دوورتر دەبینی."],
+["ون بوون","سارا ئاوڕی دایەوە و ڕێگای ماڵەوەی نەدۆزییەوە."],
+["ماڵێکی دارین","لە ناو دارستانەکەدا، ماڵێکی داری بچووک و جوانی بینی."],
+["تەق تەق","سارا لە دەرگاکەی دا: «تەق تەق!» بەڵام کەس وەڵامی نەدایەوە."],
+["دەرگای کراوە","دەرگاکە کراوە بوو، و سارا بێ ئیزن چووە ژوورەوە."],
+["سێ قاپ","لەسەر مێزەکە سێ قاپ شۆربا هەبوو: گەورە، مامناوەند و بچووک."],
+["قاپی گەورە","سارا لە قاپە گەورەکەی تامکرد: «ئای، زۆر گەرمە!»"],
+["قاپی مامناوەند","لە قاپی مامناوەندی تامکرد: «ئۆف، زۆر ساردە!»"],
+["قاپی بچووک","لە قاپە بچووکەکەی تامکرد: «ئەمە ڕێک باشە!» و هەمووی خوارد."],
+["سێ کورسی","سارا سێ کورسیی بینی: گەورە، مامناوەند و بچووک."],
+["کورسی شکا","لەسەر کورسییە بچووکەکە دانیشت، بەڵام کورسییەکە «قرچ» شکا!"],
+["ماندوویی","سارا زۆر ماندوو بوو و چووە نهۆمی سەرەوە."],
+["سێ جێگا","لە سەرەوە سێ جێگای خەوی بینی."],
+["خەوتن","لەسەر جێگا بچووکەکە پاڵکەوت و خەوی لێکەوت."],
+["خاوەنی ماڵ","لەو کاتەدا سێ ورچی قاوەیی گەڕانەوە: باوکە ورچ، دایکە ورچ و ورچە بچووکەکە."],
+["قاپی بەتاڵ","ورچە بچووکەکە گوتی: «کێ شۆرباکەی منی خواردووە؟!»"],
+["کورسیی شکاو","«کورسییەکەشم شکاوە!» ورچە بچووکەکە زۆر دڵتەنگ بوو."],
+["بە هێواشی","سێ ورچەکە بە هێواشی چوونە سەرەوە."],
+["کچێکی نووستوو","ورچە بچووکەکە گوتی: «سەیرکەن! کچێک لەسەر جێگاکەم نووستووە!»"],
+["بەئاگاهاتن","سارا چاوەکانی کردەوە و سێ ورچی بینی. زۆر ترسا!"],
+["ورچی میهرەبان","دایکە ورچ بە نەرمی گوتی: «مەترسە کچم، ئێمە ئازارت نادەین.»"],
+["ڕاستگۆیی","سارا گوتی: «ون ببووم... بەڵام نەدەبوو بێ ئیزن بێمە ژوورەوە.»"],
+["داوای لێبوردن","سارا بە ورچە بچووکەکەی گوت: «ببورە، شۆرباکەت خوارد و کورسییەکەت شکاند.»"],
+["لێبوردن","ورچە بچووکەکە زەردەخەنەی کرد: «لێت خۆشبووم، چونکە ڕاستت گوت.»"],
+["چاککردنەوە","سارا و باوکە ورچ پێکەوە کورسییە شکاوەکەیان چاک کردەوە."],
+["شۆربای تازە","دایکە ورچ شۆربایەکی تازەی بۆ هەمووان ئامادە کرد."],
+["ڕێگای ماڵەوە","سێ ورچەکە سارایان بە ڕێگای دارستاندا گەیاندەوە ماڵەوە."],
+["دایکی دڵخۆش","دایکی سارا بە دڵخۆشییەوە لە باوەشی گرت."],
+["دیاری","سارا گوڵەکانی دایە دایکی و هەموو چیرۆکەکەی بۆ گێڕایەوە."],
+["وانەی سارا","سارا گوتی: «هەمیشە پێش ئەوەی دەست بدەمە شتی خەڵک، ئیزن وەردەگرم.»"]]}
+};
+['turtle','crow','wind','ant','duck','hen','partridge','soup','bears'].forEach(k=>{S[k].n=1});
+const $=id=>document.getElementById(id);
+const card=([k,s])=>`<button class="card" data-k="${k}" style="--cc:${s.c}"><span class="pic"><img src="img/cbg-${k}.webp" alt="${s.t}"><span class="glass"></span><img class="fg" src="img/cfg-${k}.webp" alt="">${s.n?'':'<span class="seal"><span class="sr"></span><b>کتێبی<br>تەواو</b><small>سەیرکە</small></span>'}</span><span class="see pill"><span class="tx"><b>${s.t}</b></span><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></button>`;
+const E=Object.entries(S);
+$('shelfB').innerHTML=E.filter(e=>e[1].g==='چیرۆکی کوڕان').map(card).join('');
+$('shelfG').innerHTML=E.filter(e=>e[1].g==='چیرۆکی کچان').map(card).join('');
+let cur=null,idx=0;
+const TG={"b": {"0": {"r": [17.82, 34.9, 70.72, 54.97], "p": [54.56, 9.94], "b": [20.03, 15.65, 66.3, 17.5], "n": [54.01, 92.63], "nc": "#34268c"}, "1": {"r": [9.94, 34.9, 70.86, 55.25], "p": [41.57, 10.13], "b": [11.88, 15.65, 66.99, 17.5], "n": [42.27, 92.63], "nc": "#164896"}, "ink": "#1c2248", "ph": "#4669aa"}, "g": {"0": {"r": [20.99, 39.78, 72.79, 52.3], "p": [59.12, 10.87], "b": [23.48, 17.03, 68.37, 20.72], "n": [61.46, 94.94], "nc": "#c42856"}, "1": {"r": [11.88, 39.59, 71.55, 52.58], "p": [46.13, 10.87], "b": [14.64, 18.42, 56.63, 19.8], "n": [40.19, 94.94], "nc": "#c42856"}, "ink": "#762696", "ph": "#be4678"}};
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function tplPage(s,n,i){const g=s.g==='چیرۆکی کوڕان'?'b':'g',side=n%2?0:1,t=TG[g][side];
+ return `<div class="tp" style="background-image:url(img/tpl-${g}${side?'R':'L'}.jpg)">
+ <span class="tt" style="left:${t.p[0]}%;top:${t.p[1]}%">${esc(s.x[i][0])}</span>
+ <span class="tb" style="left:${t.b[0]}%;top:${t.b[1]}%;width:${t.b[2]}%;height:${t.b[3]}%;color:${TG[g].ink}">${esc(s.x[i][1])}</span>
+ <span class="tph" style="left:${t.r[0]}%;top:${t.r[1]}%;width:${t.r[2]}%;height:${t.r[3]}%;color:${TG[g].ph}">وێنەی منداڵەکەت<br>لێرە دەبێت</span>
+ <span class="tn" style="left:${t.n[0]}%;top:${t.n[1]}%;color:${t.nc}">${n}</span></div>`}
+let P=[],L=0,leaves=[],ghostsL=[],ghostsR=[];
+const pg=(s,n)=>s.f?`img/${s.f}${n}.jpg`:`img/${{p:'bp',s:'gp',l:'lp'}[s.i]}${n}.jpg`;
+const face=(p,cls)=>`<div class="face ${cls}">${p.html}<i class="sh"></i></div>`;
+const G=7, FAN=4.2;
+function open(k){
+  const s=S[k];if(!s){home();return}pre(k);curKey=k;
+  cur=s;idx=0;
+  document.documentElement.style.setProperty('--c',s.c);
+  $('sTitle').textContent=s.t;$('sTag').textContent=s.d;$('sTag').style.background=s.c;
+  P=s.p.map((n,i)=>({html:(s.n&&n>2)?tplPage(s,n,i):`<img src="${pg(s,n)}" alt="${s.x[i][0]}" decoding="async">`,x:s.x[i],src:pg(s,n)}));
+  $('intro').hidden=!s.n;
+  if(P.length%2)P.push({html:'<div class="bk"></div>'});
+  L=P.length/2-1;
+  const gimg=i=>{const q=P[i%P.length];return `<div class="face">${q.html}<i class="sh"></i></div>`};
+  let h=`<div class="shadow"></div>`;
+  for(let g=G;g>=1;g--)h+=`<div class="base r ghost" data-g="${g}">${gimg(g+1)}</div><div class="base ghost" data-g="${g}">${gimg(g)}</div>`;
+  h+=`<div class="base r main">${face(P[0],'')}</div><div class="base main">${face(P[P.length-1],'')}</div>`;
+  for(let i=0;i<L;i++)h+=`<div class="leaf" data-i="${i}">${face(P[2*i+1],'f')}${face(P[2*i+2],'b')}</div>`;
+  $('book').innerHTML=h;leaves=[...$('book').querySelectorAll('.leaf')];
+  $('book').querySelectorAll('.ghost').forEach(el=>{const g=+el.dataset.g,r=el.classList.contains('r');
+    el.style.transform=`translateX(${r?g*3.2:-g*3.2}px) translateY(${g*1.2}px) rotateY(${r?g*FAN:-g*FAN}deg) translateZ(${-g*2.2}px)`;el.style.filter=`brightness(${.9-g*.07})`});
+  $('dots').innerHTML=Array.from({length:L+1},()=>'<span></span>').join('');
+  $('home').style.display='none';$('story').style.display='block';
+  window.scrollTo(0,0);show(0);
+}
+function home(){$('story').style.display='none';$('home').style.display='block';cur=null}
+function setLeaf(lf,a,anim,z){
+  const t=Math.sin(a*Math.PI/180);
+  if(z!==undefined)lf.dataset.z=z;
+  lf.style.transition=anim?'':'none';
+  lf.style.transform=`translateZ(${lf.dataset.z||2}px) rotateY(${a}deg) translateZ(${t*18}px)`;
+  lf.style.setProperty('--s',t.toFixed(3));
+}
+function layout(anim=true){
+  leaves.forEach((lf,i)=>{const f=i<idx;setLeaf(lf,f?180:0,anim,2+(f?i:L-i)*0.8);lf.style.zIndex=f?50+i:50+(L-i)});
+}
+function show(j,anim=true){
+  idx=Math.max(0,Math.min(L,j));layout(anim);
+  const vis=[P[2*idx],P[2*idx+1]].filter(p=>p&&p.x);
+  $('txt').innerHTML=vis.map(()=>`<h4></h4><p></p>`).join('');$('txt').style.display=(vis.length&&!cur.n)?'':'none';
+  const hs=$('txt').querySelectorAll('h4'),ps=$('txt').querySelectorAll('p');
+  vis.forEach((p,i)=>{hs[i].textContent=p.x[0];ps[i].textContent=p.x[1]});
+  [...$('dots').children].forEach((d,k)=>d.classList.toggle('on',k===idx));
+  $('prev').disabled=idx===0;$('next').disabled=idx===L;$('rprev').disabled=idx===0;$('rnext').disabled=idx===L;
+}
+function go(j){show(j)}
+// drag the page with the finger (RTL: drag right = next page)
+
+const WA='9647515164309'; // WhatsApp number, e.g. 9647701234567
+let curKey='';
+function waLink(){const t=cur?cur.t:'';const msg=`سڵاو، دەمەوێت کتێبی «${t}» داوا بکەم.\nناوی منداڵ: ${$('fName').value.trim()}\nژمارەی مۆبایل: ${$('fPhone').value.trim()}\nناونیشان: ${$('fAddr').value.trim()}`;return `https://wa.me/${WA}?text=${encodeURIComponent(msg)}`}
+function openSheet(){if(!cur)return;$('sName').textContent=cur.t;$('sImg').src=`img/card-${curKey}.webp`;$('sheet').hidden=false;requestAnimationFrame(()=>requestAnimationFrame(()=>$('sheet').classList.add('on')));$('send').href=waLink()}
+function closeSheet(){$('sheet').classList.remove('on');setTimeout(()=>{$('sheet').hidden=true},450)}
+$('order2').onclick=openSheet;$('book').addEventListener('click',e=>{if(e.target.closest('.ctab')){if(RD)closeReader();openSheet()}});$('sx').onclick=closeSheet;$('sbg').onclick=closeSheet;
+['fName','fPhone','fAddr'].forEach(id=>$(id).addEventListener('input',()=>{$(id).parentNode.classList.remove('bad');$('send').href=waLink()}));
+$('send').addEventListener('click',e=>{let ok=true;[['fName',1],['fPhone',7],['fAddr',3]].forEach(([id,n])=>{const bad=$(id).value.replace(/\s/g,'').length<n;$(id).parentNode.classList.toggle('bad',bad);if(bad)ok=false});if(!ok){e.preventDefault();return}$('send').href=waLink()});
+$('ordf').addEventListener('submit',e=>e.preventDefault());
+let ROT=false,RD=false;
+const stHome=$('stage').parentNode;
+function fit(){
+  if(!RD)return;
+  const port=innerHeight>innerWidth;ROT=port;
+  const aw=port?innerHeight:innerWidth, ah=port?innerWidth:innerHeight;
+  const rt=$('rot');
+  rt.style.width=aw+'px';rt.style.height=ah+'px';
+  rt.style.transform=port?`translateX(${innerWidth}px) rotate(90deg)`:'none';
+  const bw=Math.min(aw-190,(ah-6)/.75);$('book').style.setProperty('--bw',bw+'px');
+}
+async function openReader(){
+  RD=true;setTimeout(()=>{$('rhint').classList.add('on');setTimeout(()=>$('rhint').classList.remove('on'),3800)},500);$('rot').insertBefore($('stage'),$('rot').firstChild);$('reader').hidden=false;document.body.style.overflow='hidden';fit();
+  try{await document.documentElement.requestFullscreen?.();await screen.orientation?.lock?.('landscape');}catch(e){}
+  setTimeout(fit,300);
+}
+function closeReader(){
+  RD=false;ROT=false;$('reader').hidden=true;stHome.insertBefore($('stage'),stHome.firstChild);$('book').style.removeProperty('--bw');document.body.style.overflow='';
+  try{screen.orientation?.unlock?.()}catch(e){}
+  try{if(document.fullscreenElement)document.exitFullscreen()}catch(e){}
+}
+$('land').onclick=openReader;$('rclose').onclick=closeReader;
+$('rnext').onclick=()=>go(idx+1);$('rprev').onclick=()=>go(idx-1);
+addEventListener('resize',()=>setTimeout(fit,60));addEventListener('orientationchange',()=>setTimeout(fit,250));
+let drag=null;
+const RX=e=>ROT?e.clientY:e.clientX,RY=e=>ROT?-e.clientX:e.clientY;
+$('stage').addEventListener('pointerdown',e=>{if(!cur||e.target.closest('.ctab'))return;drag={x:RX(e),y:RY(e),t:performance.now(),lf:null,dir:0,a:0};$('stage').setPointerCapture?.(e.pointerId)});
+$('stage').addEventListener('pointermove',e=>{if(!drag)return;const dx=RX(e)-drag.x,dy=RY(e)-drag.y;
+  if(!drag.dir){if(Math.abs(dx)<8||Math.abs(dx)<Math.abs(dy))return;drag.dir=dx>0?1:-1;
+    const i=drag.dir>0?idx:idx-1;drag.lf=leaves[i]||null;if(drag.lf){drag.lf.style.zIndex=200;drag.lf.dataset.z=2+(L+2)*0.8}}
+  if(!drag.lf)return;
+  const bb=$('book').getBoundingClientRect(),w=(ROT?bb.height:bb.width)*.85;
+  let p=Math.min(1,Math.max(0,(drag.dir>0?dx:-dx)/w));
+  drag.a=drag.dir>0?p*180:180-p*180;setLeaf(drag.lf,drag.a,false)});
+const end=e=>{if(!drag)return;const d=drag;drag=null;const dx=RX(e)-d.x,dy=RY(e)-d.y,v=Math.abs(dx)/Math.max(1,performance.now()-d.t);
+  if(d.lf){const p=d.dir>0?d.a/180:1-d.a/180;show(idx+((p>.3||v>.5)?d.dir:0));return}
+  if(Math.abs(dx)<8&&Math.abs(dy)<8){const r=$('book').getBoundingClientRect();go(idx+((ROT?e.clientY<r.top+r.height/2:e.clientX<r.left+r.width/2)?1:-1))}};
+$('stage').addEventListener('pointerup',end);$('stage').addEventListener('pointercancel',end);
+document.querySelectorAll('.shelf').forEach(sh=>sh.addEventListener('click',e=>{const c=e.target.closest('.card');if(c)location.hash=c.dataset.k}));
+$('back').onclick=()=>{closeReader();location.hash='';home()};
+$('prev').onclick=()=>go(idx-1);$('next').onclick=()=>go(idx+1);
+document.addEventListener('keydown',e=>{if(!cur)return;if(e.key==='ArrowLeft')go(idx+1);if(e.key==='ArrowRight')go(idx-1)});
+
+const pre=k=>{const t=S[k];if(!t||t._pre)return;t._pre=1;(t.n?[1,2]:t.p.slice(0,6)).forEach(n=>{const im=new Image();im.decoding='async';im.src=pg(t,n)})};
+document.querySelectorAll('.shelf').forEach(sh=>{sh.addEventListener('pointerdown',e=>{const c=e.target.closest('.card');if(c)pre(c.dataset.k)},{passive:true});sh.addEventListener('mouseover',e=>{const c=e.target.closest('.card');if(c)pre(c.dataset.k)})});
+
+const fitLab=()=>document.querySelectorAll('.card .see b').forEach(b=>{let f=19;b.style.fontSize=f+'px';while(b.scrollWidth>b.clientWidth&&f>13){f-=.5;b.style.fontSize=f+'px'}});
+fitLab();addEventListener('resize',fitLab);document.fonts&&document.fonts.ready.then(fitLab);
+addEventListener('load',()=>{Object.keys(S).forEach(pre);['bL','bR','gL','gR'].forEach(t=>{const im=new Image();im.src=`img/tpl-${t}.jpg`})});
+const route=()=>{const h=location.hash.slice(1);h&&S[h]?open(h):home()};
+window.addEventListener('hashchange',route);route();
+}
+</script>
+</body>
+</html>
