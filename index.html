@@ -636,15 +636,20 @@ function setLeaf(lf,a,anim,z){
   if(z!==undefined)lf.dataset.z=z;
   lf.style.transition='none';cancelAnimationFrame(lf._raf);
   const from=lf._a||0;
-  if(!anim||Math.abs(from-a)<.5){if(!anim&&a%180)bend(lf,true);else bend(lf,false);applyLeaf(lf,a);return}
-  bend(lf,true);const t0=performance.now(),D=620,ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
-  const st=n=>{const p=Math.min(1,(n-t0)/D);applyLeaf(lf,from+(a-from)*ease(p));if(p<1)lf._raf=requestAnimationFrame(st);else{bend(lf,false);applyLeaf(lf,a)}};
+  if(!anim||Math.abs(from-a)<.5){applyLeaf(lf,a);return}
+  const t0=performance.now(),D=620,ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2;
+  const st=n=>{const p=Math.min(1,(n-t0)/D);applyLeaf(lf,from+(a-from)*ease(p));if(p<1)lf._raf=requestAnimationFrame(st)};
   lf._raf=requestAnimationFrame(st);
 }
 function layout(anim=true){
   leaves.forEach((lf,i)=>{const f=i<idx;setLeaf(lf,f?180:0,anim,1+(f?i:L-i)*0.12);lf.style.zIndex=f?50+i:50+(L-i)});
 }
-function loadNear(){const lv=[...$('book').querySelectorAll('.leaf,.base.main')];lv.forEach(el=>{const i=el.classList.contains('leaf')?+el.dataset.i:-9;const near=el.classList.contains('base')||Math.abs(i-idx)<=2||Math.abs(i-(idx-1))<=2;if(near)el.querySelectorAll('img[data-src]').forEach(im=>{im.src=im.dataset.src;im.removeAttribute('data-src')})})}
+function loadNear(){
+  const ld=el=>el.querySelectorAll('img[data-src]').forEach(im=>{im.src=im.dataset.src;im.removeAttribute('data-src')});
+  $('book').querySelectorAll('.base.main').forEach(ld);
+  leaves.forEach((lf,i)=>{const d=i-idx;const seg=d>=-2&&d<=1;if(lf._a%180===0||!seg)bend(lf,seg);if(d>=-3&&d<=3)ld(lf)});
+  if(!cur._bg){cur._bg=1;const q=P.filter(x=>x.html&&x.html.includes("<img")).map(x=>x.src).filter(Boolean);let k=0;const nx=()=>{if(k>=q.length)return;const im=new Image();im.onload=im.onerror=()=>setTimeout(nx,30);im.src=q[k++]};setTimeout(nx,600)}
+}
 function show(j,anim=true){
   idx=Math.max(0,Math.min(L,j));loadNear();layout(anim);
   const bk=$('book');bk.classList.toggle('cl0',CV&&idx===0);bk.classList.toggle('cl1',CV&&idx===L);bk.style.setProperty('--sx',CV&&idx===0?'25%':CV&&idx===L?'-25%':'0%');
